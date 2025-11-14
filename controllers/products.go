@@ -13,7 +13,6 @@ var temp = template.Must(template.ParseGlob("templates/*.html"))
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	allProducts := models.GetAllProducts()
-	fmt.Println("All products:", allProducts)
 	temp.ExecuteTemplate(w, "Index", allProducts)
 }
 
@@ -50,4 +49,10 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		models.InsertProduct(produto)
 		http.Redirect(w, r, "/", 301)
 	}
+}
+
+func Delete(w http.ResponseWriter, r *http.Request) {
+	idProduto := r.URL.Query().Get("id")
+	models.DeleteProduct(idProduto)
+	http.Redirect(w, r, "/", 301)
 }
