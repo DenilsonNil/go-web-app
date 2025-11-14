@@ -22,8 +22,8 @@
                             <td>{{.Descricao}}</td>
                             <td>{{.Preco}}</td>
                             <td>{{.Quantidade}}</td> 
-                            <td><a class="btn btn-danger"
-                                    onclick="onDeleteClick('{{.Id}}', '{{.Nome}}')" style="color: white;">Deletar</a></td>
+                            <td><a href="/edit?id={{.Id}}" class="btn btn-info" style="color: white;">Editar</a></td>
+                            <td><a class="btn btn-danger" onclick="onDeleteClick('{{.Id}}', '{{.Nome}}')" style="color: white;">Deletar</a></td>
                         </tr>
                         {{end}}
                     </tbody>

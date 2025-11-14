@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"webapp/db"
 )
@@ -15,7 +16,7 @@ type Product struct {
 
 func GetAllProducts() []Product {
 	db := db.DbConnect()
-	rows, err := db.Query("SELECT * FROM produtos")
+	rows, err := db.Query("SELECT * FROM produtos order by id asc")
 	products := []Product{}
 	if err != nil {
 		log.Fatal(err)
@@ -60,5 +61,31 @@ func DeleteProduct(id string) {
 	}
 	log.Println("Produto deletado com sucesso, ID:", id)
 
+	defer db.Close()
+}
+
+func GetProductByID(id string) Product {
+	db := db.DbConnect()
+	row := db.QueryRow("SELECT * FROM produtos WHERE id=$1", id)
+
+	var produto Product
+	err := row.Scan(&produto.Id, &produto.Nome, &produto.Descricao, &produto.Preco, &produto.Quantidade)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer db.Close()
+	fmt.Println("Produto buscado: ", produto)
+	return produto
+}
+
+func UpdateProduct(product Product) {
+	db := db.DbConnect()
+	updateStatement := "UPDATE produtos SET nome=$1, descricao=$2, preco=$3, quantidade=$4 WHERE id=$5"
+	_, err := db.Exec(updateStatement, product.Nome, product.Descricao, product.Preco, product.Quantidade, product.Id)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Produto atualizado com sucesso:", product.Nome)
 	defer db.Close()
 }
