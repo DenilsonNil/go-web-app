@@ -38,3 +38,14 @@ func GetAllProducts() []Product {
 
 	return products
 }
+
+func InsertProduct(product Product) {
+	db := db.DbConnect()
+	insertStatement := "INSERT INTO produtos (nome, descricao, preco, quantidade) VALUES ($1, $2, $3, $4)"
+	_, err := db.Exec(insertStatement, product.Nome, product.Descricao, product.Preco, product.Quantidade)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Produto inserido com sucesso:", product.Nome)
+	defer db.Close()
+}
